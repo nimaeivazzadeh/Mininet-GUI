@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import datetime
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch, cm
-from reportlab.lib.pagesizes import letter
+from reportlab.lib.pagesizes import letter, A4, landscape
 import subprocess
 import customtopology
 import os
@@ -30,9 +30,11 @@ def json():
 # About software version and the developer
 def about():
     tkinter.messagebox.showinfo("GUI Mininet application",
-                                "\nVersion - 1" +
+                                "\n Version - 1" +
                                 ' ' + "\n CopyRight@Nima Eivazzadeh" +
-                                "\n Developed by Python 3+")
+                                "\n Developed by Python 3+ for the \n"
+                                " course problems solving \n "
+                                "with scripting language")
 
 
 # create a path from JSON file
@@ -104,30 +106,31 @@ def plot_preview():
 
 
 def pdf():
-    tkinter.messagebox.showinfo("Generate pdf", "Results has been stored in a PDF file.")
-    status.config(text="Pdf has been generated")
+#    tkinter.messagebox.showinfo("Generate pdf", "Results has been stored in a PDF file.")
+#    status.config(text="Pdf has been generated")
     reader = open('./stdout.txt', 'r')
-    data_mininet_pdf = reader.read()
-    return data_mininet_pdf
+    rep = reader.readlines()
+    return rep
 
 
-# def generate_pdf(lines, output="report_from_mininet.pdf"):
-#     now = datetime.datetime.today()
-#     date = now.strftime("%h %d %Y %H:%M:%S")
-#     c = canvas.Canvas(output)
-#     text_object = c.beginText()
-#     text_object.setTextOrigin(inch, 11*inch)
-#     text_object.textLines('''Result from Mininet: %s''' % date)
-#
-#     for line in lines:
-#         text_object.textLine(line.strip())
-#         c.drawText(text_object)
-#         c.showPage()
-#         c.save()
-#
-#
-# data_mininet_pdf = pdf()
-# generate_pdf(data_mininet_pdf)
+def generate_pdf(lines, output="report.pdf"):
+    now = datetime.datetime.today()
+    date = now.strftime("%h %d %Y %H:%M:%S")
+    c = canvas.Canvas(output)
+    text_object = c.beginText()
+    text_object.setTextOrigin(inch, 11*inch)
+    text_object.textLines('''Result from Mininet: %s''' % date)
+
+    for line in lines:
+        text_object.textLine(line.rstrip())
+    c.drawText(text_object)
+    c.showPage()
+    c.save()
+
+
+report = pdf()
+generate_pdf(report)
+
 
 def clear_canvas():
     status.config(text="Canvas has been cleared")
@@ -179,10 +182,6 @@ textBox_mininet_deploy = Text(root, height=40, width=200, bg='lavender')
 textBox_mininet_deploy.pack(side=TOP, padx=20, pady=20)
 customtopology.mnOutput = textBox_mininet_deploy
 
-# Photo
-# photo = PhotoImage(file="1.png")
-# label = Label(root, image=photo)
-# label.pack(side=LEFT)
 
 # StatusBar
 status = Label(root, text="Mininet Project designed and developed by Nima Eivazzadeh",

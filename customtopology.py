@@ -25,28 +25,33 @@ def testtopology():
             topo = CustomTopology(num_hosts, OVSSwitch=0)
             net = Mininet(topo=topo)
 
-            print('****************************************************************************** Start the topology\n')
+            print('==============> Start the topology\n')
             # mnOutput.insert(END, '******************** start the topology\n')
             net.start()
 
-            print('******************** Test the topology by running a ping command\n')
+            print('==============> Test the topology by running a ping command\n')
             # mnOutput.insert(END, '******************** test the topology by running a ping command\n')
 
             # mnOutput.insert(END, '********************* read data from json file and ping all hosts\n')
 
             ping_all_full = net.pingAllFull()
             # mnOutput.insert(END, '********************* stop all network\n')
-            print('Result from ping command: \n' + '\n' + str(ping_all_full) + '\n' + '\n% of packets dropped.\n')
+            print('Result from ping Test: \n' + '\n' + str(ping_all_full) + '\n' + '\n% of packets dropped.\n')
 
             ping_pair = net.pingPairFull()
-            print('Result from ping pair command: \n' + '\n' + str(ping_pair) + '\n' + '\n% of packets dropped.\n')
+            print('Result from Regression Test : \n' + '\n' + str(ping_pair) + '\n' + '\n% of packets dropped.\n')
 
-            print('******************** Testing TCP bandwidth between: \n')
+            print('==============> Testing TCP bandwidth between: \n')
             iPerf = net.iperf()
             print('Result from iPerf: \n' + '\n' + str(iPerf) + '\n')
 
-#           mo = net.monitor()
-#           print('Result from monitor: ' + str(mo))
+#            mo = net.monitor(self, hosts=, timeoutms=)
+#            print('Result from monitor: ' + str(mo))
+
+
+
+            #            ping_cpu = net.
+#            print('Stop the network:' + str(ping_cpu) + '\n')
 
             stop = net.stop()
             print('Stop the network:' + str(stop) + '\n')
@@ -71,12 +76,12 @@ class CustomTopology(Topo):
         info('****************************Add Switches from JSON file')
         for switch in data['Switches']:
             switch = self.addSwitch(switch)
-            print("Switch------------------------------------------------>" + switch + '\n',)
+            print("Switch========>" + switch + '\n',)
 
         info('****************************Add Hosts from JSON file')
         for host in data['Hosts']:
             host = self.addHost(host)
-            print("Host-------------------------------------------------->" + host + '\n',)
+            print("Host==========>" + host + '\n',)
 
         info('****************************Links hosts and switches to each other based on JSON file Links dictionary')
         for client_machine in range(n):
