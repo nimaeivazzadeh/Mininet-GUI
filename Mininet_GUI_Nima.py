@@ -118,8 +118,9 @@ def generate_pdf(lines, output="report.pdf"):
     date = now.strftime("%h %d %Y %H:%M:%S")
     c = canvas.Canvas(output)
     text_object = c.beginText()
-    text_object.setTextOrigin(inch, 11*inch)
-    text_object.textLines('''Result from Mininet: %s''' % date)
+#    c.setPageSize(landscape(letter))
+    text_object.setTextOrigin(inch, 10*inch)
+    text_object.textLines('''Result from Mininet: %s ''' % date + '\n')
 
     for line in lines:
         text_object.textLine(line.rstrip())
