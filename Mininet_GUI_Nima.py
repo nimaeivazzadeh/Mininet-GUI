@@ -137,6 +137,9 @@ def clear_canvas():
     status.config(text="Canvas has been cleared")
     textBox_mininet_deploy.delete('1.0', END)
 
+def callback(*argv):
+    customtopology.node_1 = node_1.get()
+    customtopology.node_2 = node_2.get()
 
 root = Tk()
 
@@ -178,6 +181,29 @@ PdfReportBtn.pack(side=LEFT, padx=3, pady=3)
 ClearCanvasBtn.pack(side=LEFT, padx=3, pady=3)
 toolbar.pack(side=TOP, fill=X)
 
+#Drop down lists
+choices = list()
+
+for host in customtopology.data['Hosts']:
+    choices.append(host)
+
+node_1 = StringVar(root)
+node_2 = StringVar(root)
+
+node_1.set(choices[0])
+node_2.set(choices[1])
+callback()
+
+
+dropdown_1 = OptionMenu(root, node_1, *choices)
+dropdown_2 = OptionMenu(root, node_2, *choices)
+
+dropdown_1.pack()
+dropdown_2.pack()
+
+node_1.trace('w', callback)
+node_2.trace('w', callback)
+
 # Textbox
 textBox_mininet_deploy = Text(root, height=40, width=200, bg='lavender')
 textBox_mininet_deploy.pack(side=TOP, padx=20, pady=20)
@@ -188,7 +214,6 @@ customtopology.mnOutput = textBox_mininet_deploy
 status = Label(root, text="Mininet Project designed and developed by Nima Eivazzadeh",
                      bd=2, bg="light blue", relief=SUNKEN, anchor=W)
 status.pack(side=TOP, padx=5, pady=5)
-
 
 # Mainloop
 root.mainloop()

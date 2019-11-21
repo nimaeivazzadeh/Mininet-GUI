@@ -13,7 +13,8 @@ from contextlib import redirect_stdout, redirect_stderr
 
 data = json.load(open('Topology'))
 mnOutput = None
-
+node_1 = ''
+node_2 = ''
 
 def testtopology():
     tkinter.messagebox.showinfo("Deploy topology to mininet ", "Press ok button and wait for a seconds to see result")
@@ -42,8 +43,13 @@ def testtopology():
             print('Result from Regression Test : \n' + '\n' + str(ping_pair) + '\n' + '\n % of packets dropped.\n')
 
             print('\n ==============> Testing TCP bandwidth between: \n')
-            iPerf = net.iperf()
-            print('Result from iPerf: \n' + '\n' + str(iPerf) + '\n')
+
+            iperf_origin = net.getNodeByName(node_1)
+            iperf_destination = net.getNodeByName(node_2)
+
+            iPerf = net.iperf([iperf_origin, iperf_destination])
+
+            print('Result from iPerf between node ' + node_1 + ' and node ' + node_2 +  '\n' + '\n' + str(iPerf) + '\n')
 
 #            mo = net.monitor(self, hosts=, timeoutms=)
 #            print('Result from monitor: ' + str(mo))
