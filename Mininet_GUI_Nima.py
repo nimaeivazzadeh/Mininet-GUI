@@ -27,6 +27,7 @@ def json():
         tkinter.messagebox.showinfo("The JSON file", data)
 
 
+
 # About software version and the developer
 def about():
     tkinter.messagebox.showinfo("GUI Mininet application",
@@ -162,15 +163,15 @@ menu_bar.add_cascade(label="Edit", menu=EditMenu)
 EditMenu.add_command(label="About", command=about)
 
 # Toolbar
-toolbar = Frame(root, bg="steelblue1")
+toolbar = Frame(root, bg="lightblue")
 
-PlotBtn = Button(toolbar, text="Topology preview as a plot", bg='azure', command=plot_preview)
-PathBtn = Button(toolbar, text="Path preview as a plot", bg='azure', command=path_preview)
-Co_checkBtn = Button(toolbar, text="Connection check preview as a plot", bg='azure', command=co_check)
+PlotBtn = Button(toolbar, text="Topology preview as a plot", bg='lightblue', command=plot_preview)
+PathBtn = Button(toolbar, text="Path preview as a plot", bg='lightblue', command=path_preview)
+Co_checkBtn = Button(toolbar, text="Connection check preview as a plot", bg='lightblue', command=co_check)
 DeployBtn = Button(toolbar, text="Deploy topology to mininet from the JSON file", bg='DeepSkyBlue2', command=customtopology.testtopology)
-ModifyJsonBtn = Button(toolbar, text="Preview the JSON File", bg='azure',  command=json)
-PdfReportBtn = Button(toolbar, text="Generate a PDF report",  bg='azure', command=pdf)
-ClearCanvasBtn = Button(toolbar, text="Clear canvas",  bg='azure', command=clear_canvas)
+ModifyJsonBtn = Button(toolbar, text="Preview the JSON File", bg='lightblue',  command=json)
+PdfReportBtn = Button(toolbar, text="Generate a PDF report",  bg='lightblue')
+ClearCanvasBtn = Button(toolbar, text="Clear canvas entirely",  bg='lightblue', command=clear_canvas)
 
 PlotBtn.pack(side=LEFT, padx=1, pady=1)
 PathBtn.pack(side=LEFT, padx=1, pady=1)
@@ -198,23 +199,27 @@ callback()
 drop_down_1 = OptionMenu(root, node_1, *choices)
 drop_down_2 = OptionMenu(root, node_2, *choices)
 
-
-drop_down_1.pack(side=TOP, fill=BOTH, padx=1, pady=1)
-drop_down_2.pack(side=TOP, fill=BOTH)
+drop_down_1.pack(side=TOP,  padx=3, pady=3, )
+drop_down_2.pack(side=TOP,  padx=3, pady=3, )
 
 node_1.trace('w', callback)
 node_2.trace('w', callback)
 
+# Iperf label
+w = Label(root, text="Choose hosts from drop down list and press deploy button to test IPerf for any specific nodes and see the result in the canvas",
+                bg='deepskyblue', bd=2, relief=GROOVE)
+w.pack(side=TOP)
+
 
 # Textbox
-textBox_mininet_deploy = Text(root, height=30, width=200, bg='lavender')
-textBox_mininet_deploy.pack(side=TOP,  fill=X, padx=5, pady=5)
+textBox_mininet_deploy = Text(root, height=35, width=200, bg='lightblue')
+textBox_mininet_deploy.pack(side=TOP,  fill=X, padx=2, pady=2)
 customtopology.mnOutput = textBox_mininet_deploy
 
 
 # StatusBar
 status = Label(root, text="Mininet Project designed and developed by Nima Eivazzadeh",
-                     bd=5, bg="light blue", relief=GROOVE, )
+                     bd=2, bg="deepskyblue", relief=GROOVE, )
 status.pack(side=BOTTOM, fill=X, padx=20, pady=20)
 
 # Mainloop

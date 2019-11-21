@@ -20,7 +20,7 @@ node_2 = ''
 def testtopology():
     tkinter.messagebox.showinfo("Deploy topology to mininet ", "Press ok button and wait for a seconds to see result")
 
-    with open('./stdout.txt\n', 'w') as outfile:
+    with open('./stdout.txt', 'w') as outfile:
         with redirect_stdout(outfile), redirect_stderr(outfile):
 
             num_hosts = len(data['Hosts'])
