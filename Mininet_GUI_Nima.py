@@ -137,9 +137,11 @@ def clear_canvas():
     status.config(text="Canvas has been cleared")
     textBox_mininet_deploy.delete('1.0', END)
 
+
 def callback(*argv):
     customtopology.node_1 = node_1.get()
     customtopology.node_2 = node_2.get()
+
 
 root = Tk()
 

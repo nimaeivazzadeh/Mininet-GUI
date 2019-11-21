@@ -16,6 +16,7 @@ mnOutput = None
 node_1 = ''
 node_2 = ''
 
+
 def testtopology():
     tkinter.messagebox.showinfo("Deploy topology to mininet ", "Press ok button and wait for a seconds to see result")
 
@@ -49,7 +50,7 @@ def testtopology():
 
             iPerf = net.iperf([iperf_origin, iperf_destination])
 
-            print('Result from iPerf between node ' + node_1 + ' and node ' + node_2 +  '\n' + '\n' + str(iPerf) + '\n')
+            print('Result from iPerf between node ' + node_1 + ' and node ' + node_2 + '\n' + '\n' + str(iPerf) + '\n')
 
 #            mo = net.monitor(self, hosts=, timeoutms=)
 #            print('Result from monitor: ' + str(mo))
@@ -60,8 +61,6 @@ def testtopology():
             clean = net.cleanup
             print('cleanup the mininet network: ' + str(clean) + '\n')
 
-#            cpu = net.runCpuLimitTest(cpu=0.5)
-#            print('Cpu limit test: ' + str(cpu))
 
     with open('./stdout.txt') as infile:
         mnOutput.insert(END, infile.read())
@@ -88,39 +87,6 @@ class CustomTopology(Topo):
         for client_machine in range(n):
             host = self.addHost('h%s' % (client_machine + 1))
             self.addLink(host, switch)
-
-        info('****************************Links path')
-#         for path in data['Path']:
-#             for p in path:
-#                 src = p
-#                 dst = path[p]
-#
-#                 sr_link = src
-#                 ds_link = dst
-#
-#                 self.addLink(sr_link, ds_link)
-#                 print("Path==========>" + Path + port1 + port2 + '\n', )
-
-        # for link in data['Links']:
-        #     for x in link:
-        #         source_node = x
-        #         destination_node = link[x]
-        #
-        #         source_node_name = source_node.split('-')[0]
-        #         destination_node_name = destination_node.split('-')[0]
-        #
-        #         self.addLink(source_node_name, destination_node_name)
-
-                # create graph from JSON file made for the project
-                # g.add_node(source_node_name)
-                # g.add_node(destination_node_name)
-                # g.add_edge(source_node_name, destination_node_name)
-
-        # pos = nx.spring_layout(g)
-        # nx.draw_networkx(g, pos, node_color='r', with_labels=True, node_size=400, font_size=10)
-        # plt.ylabel('Topology')
-        # plt.title('Topology graph based on "Links" dictionary in JSON file')
-        # plt.show()
 
 
 if __name__ == '__main__':
