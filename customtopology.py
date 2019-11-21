@@ -20,7 +20,7 @@ node_2 = ''
 def testtopology():
     tkinter.messagebox.showinfo("Deploy topology to mininet ", "Press ok button and wait for a seconds to see result")
 
-    with open('./stdout.txt', 'w') as outfile:
+    with open('./stdout.txt\n', 'w') as outfile:
         with redirect_stdout(outfile), redirect_stderr(outfile):
 
             num_hosts = len(data['Hosts'])
@@ -28,16 +28,11 @@ def testtopology():
             net = Mininet(topo=topo)
 
             print('\n =================================================> Start the topology \n')
-            # mnOutput.insert(END, '******************** start the topology\n')
             net.start()
 
             print('\n =================================================> Test the topology by running a ping command \n')
-            # mnOutput.insert(END, '******************** test the topology by running a ping command\n')
-
-            # mnOutput.insert(END, '********************* read data from json file and ping all hosts\n')
 
             ping_all_full = net.pingAllFull()
-            # mnOutput.insert(END, '********************* stop all network\n')
             print('Result from ping Test: \n' + '\n' + str(ping_all_full) + '\n' + '\n % of packets dropped.\n')
 
             ping_pair = net.pingPairFull()
@@ -52,14 +47,12 @@ def testtopology():
 
             print('Result from iPerf between node ' + node_1 + ' and node ' + node_2 + '\n' + '\n' + str(iPerf) + '\n')
 
-#            mo = net.monitor(self, hosts=, timeoutms=)
-#            print('Result from monitor: ' + str(mo))
-
             stop = net.stop()
             print('Stop the network:' + str(stop) + '\n')
 
             clean = net.cleanup
             print('cleanup the mininet network: ' + str(clean) + '\n')
+
 
 
     with open('./stdout.txt') as infile:

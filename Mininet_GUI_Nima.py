@@ -84,7 +84,7 @@ def co_check():
 # Plot preview
 def plot_preview():
     status.config(text="Plot Preview form Links dictionary in JSON file")
-    g = nx.DiGraph()
+    g = nx.Graph()
     for link in customtopology.data['Links']:
         for x in link:
             source_node = x
@@ -99,15 +99,13 @@ def plot_preview():
             g.add_edge(source_node_name, destination_node_name)
 
     pos = nx.spring_layout(g)
-    nx.draw_networkx(g, pos, node_color='r', with_labels=True, node_size=400, font_size=10)
+    nx.draw_networkx(g, pos, node_color='orange', with_labels=True, node_size=400, font_size=10)
     plt.ylabel('Topology')
     plt.title('Topology graph based on "Links" dictionary in JSON file')
     plt.show()
 
 
 def pdf():
-#    tkinter.messagebox.showinfo("Generate pdf", "Results has been stored in a PDF file.")
-#    status.config(text="Pdf has been generated")
     reader = open('./stdout.txt', 'r')
     rep = reader.readlines()
     return rep
@@ -138,7 +136,7 @@ def clear_canvas():
     textBox_mininet_deploy.delete('1.0', END)
 
 
-def callback(*argv):
+def callback(*args):
     customtopology.node_1 = node_1.get()
     customtopology.node_2 = node_2.get()
 
@@ -174,14 +172,15 @@ ModifyJsonBtn = Button(toolbar, text="Preview the JSON File", bg='azure',  comma
 PdfReportBtn = Button(toolbar, text="Generate a PDF report",  bg='azure', command=pdf)
 ClearCanvasBtn = Button(toolbar, text="Clear canvas",  bg='azure', command=clear_canvas)
 
-PlotBtn.pack(side=LEFT, padx=3, pady=3)
-PathBtn.pack(side=LEFT, padx=3, pady=3)
-Co_checkBtn.pack(side=LEFT, padx=3, pady=3)
-DeployBtn.pack(side=LEFT, padx=3, pady=3)
-ModifyJsonBtn.pack(side=LEFT, padx=3, pady=3)
-PdfReportBtn.pack(side=LEFT, padx=3, pady=3)
-ClearCanvasBtn.pack(side=LEFT, padx=3, pady=3)
+PlotBtn.pack(side=LEFT, padx=1, pady=1)
+PathBtn.pack(side=LEFT, padx=1, pady=1)
+Co_checkBtn.pack(side=LEFT, padx=1, pady=1)
+DeployBtn.pack(side=LEFT, padx=1, pady=1)
+ModifyJsonBtn.pack(side=LEFT, padx=1, pady=1)
+PdfReportBtn.pack(side=LEFT, padx=1, pady=1)
+ClearCanvasBtn.pack(side=LEFT, padx=1, pady=1)
 toolbar.pack(side=TOP, fill=X)
+
 
 #Drop down lists
 choices = list()
@@ -189,33 +188,34 @@ choices = list()
 for host in customtopology.data['Hosts']:
     choices.append(host)
 
-node_1 = StringVar(root)
+node_1 = StringVar(root)  # made a variable for dropdown
 node_2 = StringVar(root)
 
 node_1.set(choices[0])
 node_2.set(choices[1])
 callback()
 
+drop_down_1 = OptionMenu(root, node_1, *choices)
+drop_down_2 = OptionMenu(root, node_2, *choices)
 
-dropdown_1 = OptionMenu(root, node_1, *choices)
-dropdown_2 = OptionMenu(root, node_2, *choices)
 
-dropdown_1.pack()
-dropdown_2.pack()
+drop_down_1.pack(side=TOP, fill=BOTH, padx=1, pady=1)
+drop_down_2.pack(side=TOP, fill=BOTH)
 
 node_1.trace('w', callback)
 node_2.trace('w', callback)
 
+
 # Textbox
-textBox_mininet_deploy = Text(root, height=40, width=200, bg='lavender')
-textBox_mininet_deploy.pack(side=TOP, padx=20, pady=20)
+textBox_mininet_deploy = Text(root, height=30, width=200, bg='lavender')
+textBox_mininet_deploy.pack(side=TOP,  fill=X, padx=5, pady=5)
 customtopology.mnOutput = textBox_mininet_deploy
 
 
 # StatusBar
 status = Label(root, text="Mininet Project designed and developed by Nima Eivazzadeh",
-                     bd=2, bg="light blue", relief=SUNKEN, anchor=W)
-status.pack(side=TOP, padx=5, pady=5)
+                     bd=5, bg="light blue", relief=GROOVE, )
+status.pack(side=BOTTOM, fill=X, padx=20, pady=20)
 
 # Mainloop
 root.mainloop()
