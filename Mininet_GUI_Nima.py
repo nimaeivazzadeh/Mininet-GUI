@@ -105,9 +105,11 @@ def plot_preview():
     plt.show()
 
 
+# Generate a report when deployment has been completed
 def report():
     tkinter.messagebox.showinfo("Generate report", "Report has been generated as a txt format")
     status.config(text="Report has been published as a txt format")
+
     reader = open('./stdout.txt', 'r')
     rep = reader.readlines()
 
@@ -117,11 +119,13 @@ def report():
     f.close()
 
 
+# clear canvas
 def clear_canvas():
     status.config(text="Canvas has been cleared")
     textBox_mininet_deploy.delete('1.0', END)
 
 
+# callback function for drop down
 def callback(*args):
     customtopology.node_1 = node_1.get()
     customtopology.node_2 = node_2.get()
@@ -168,7 +172,7 @@ ClearCanvasBtn.pack(side=LEFT, padx=1, pady=1)
 toolbar.pack(side=TOP, fill=X)
 
 
-#Drop down lists
+# Drop down lists
 choices = list()
 
 for host in customtopology.data['Hosts']:
