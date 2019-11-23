@@ -106,30 +106,49 @@ def plot_preview():
     plt.show()
 
 
-def pdf():
+def report():
+    tkinter.messagebox.showinfo("Generate report", "Report has been generated as a txt format")
+    status.config(text="Report has been published in a txt format")
     reader = open('./stdout.txt', 'r')
     rep = reader.readlines()
-    return rep
+
+    f = open('report.txt', 'w')
+    for item in rep:
+        f.write(str(item))
+    f.close()
 
 
-def generate_pdf(lines, output="report.pdf"):
-    now = datetime.datetime.today()
-    date = now.strftime("%h %d %Y %H:%M:%S")
-    c = canvas.Canvas(output)
-    text_object = c.beginText()
-#    c.setPageSize(landscape(letter))
-    text_object.setTextOrigin(inch, 10*inch)
-    text_object.textLines('''Result from Mininet: %s ''' % date + '\n')
-
-    for line in lines:
-        text_object.textLine(line.rstrip())
-    c.drawText(text_object)
-    c.showPage()
-    c.save()
+# f = open(“output.txt”, “w”)
+#
+# for item in my_list:
+# f.write(str(item) + “\n”)
+#
+# f.close()
+# def pdf():
+#
+#    reader = open('./stdout.txt', 'r')
+#    rep = reader.readlines()
+#    return rep
 
 
-report = pdf()
-generate_pdf(report)
+# def generate_pdf(lines, output="report.pdf"):
+#     now = datetime.datetime.today()
+#     date = now.strftime("%h %d %Y %H:%M:%S")
+#     c = canvas.Canvas(output)
+#     text_object = c.beginText()
+# #    c.setPageSize(landscape(letter))
+#     text_object.setTextOrigin(inch, 10*inch)
+#     text_object.textLines('''Result from Mininet: %s ''' % date + '\n')
+#
+#     for line in lines:
+#         text_object.textLine(line.rstrip())
+#     c.drawText(text_object)
+#     c.showPage()
+#     c.save()
+
+
+# report = pdf()
+# generate_pdf(report)
 
 
 def clear_canvas():
@@ -170,7 +189,7 @@ PathBtn = Button(toolbar, text="Path preview as a plot", bg='lightblue', command
 Co_checkBtn = Button(toolbar, text="Connection check preview as a plot", bg='lightblue', command=co_check)
 DeployBtn = Button(toolbar, text="Deploy topology to mininet from the JSON file", bg='DeepSkyBlue2', command=customtopology.testtopology)
 ModifyJsonBtn = Button(toolbar, text="Preview the JSON File", bg='lightblue',  command=json)
-PdfReportBtn = Button(toolbar, text="Generate a PDF report",  bg='lightblue')
+PdfReportBtn = Button(toolbar, text="Generate a report",  bg='lightblue', command=report)
 ClearCanvasBtn = Button(toolbar, text="Clear canvas entirely",  bg='lightblue', command=clear_canvas)
 
 PlotBtn.pack(side=LEFT, padx=1, pady=1)

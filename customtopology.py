@@ -23,7 +23,7 @@ def testtopology():
     with open('./stdout.txt', 'w') as outfile:
         with redirect_stdout(outfile), redirect_stderr(outfile):
 
-            num_hosts = len(data['Hosts'])
+            num_hosts = len(data['Hosts'])    # <---- This address to the 'Hosts' list in JSON file.
             topo = CustomTopology(num_hosts)
             net = Mininet(topo=topo)
 
