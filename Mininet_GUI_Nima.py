@@ -27,7 +27,6 @@ def json():
         tkinter.messagebox.showinfo("The JSON file", data)
 
 
-
 # About software version and the developer
 def about():
     tkinter.messagebox.showinfo("GUI Mininet application",
@@ -108,7 +107,7 @@ def plot_preview():
 
 def report():
     tkinter.messagebox.showinfo("Generate report", "Report has been generated as a txt format")
-    status.config(text="Report has been published in a txt format")
+    status.config(text="Report has been published as a txt format")
     reader = open('./stdout.txt', 'r')
     rep = reader.readlines()
 
@@ -116,39 +115,6 @@ def report():
     for item in rep:
         f.write(str(item))
     f.close()
-
-
-# f = open(“output.txt”, “w”)
-#
-# for item in my_list:
-# f.write(str(item) + “\n”)
-#
-# f.close()
-# def pdf():
-#
-#    reader = open('./stdout.txt', 'r')
-#    rep = reader.readlines()
-#    return rep
-
-
-# def generate_pdf(lines, output="report.pdf"):
-#     now = datetime.datetime.today()
-#     date = now.strftime("%h %d %Y %H:%M:%S")
-#     c = canvas.Canvas(output)
-#     text_object = c.beginText()
-# #    c.setPageSize(landscape(letter))
-#     text_object.setTextOrigin(inch, 10*inch)
-#     text_object.textLines('''Result from Mininet: %s ''' % date + '\n')
-#
-#     for line in lines:
-#         text_object.textLine(line.rstrip())
-#     c.drawText(text_object)
-#     c.showPage()
-#     c.save()
-
-
-# report = pdf()
-# generate_pdf(report)
 
 
 def clear_canvas():
