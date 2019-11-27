@@ -8,8 +8,36 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch, cm
 from reportlab.lib.pagesizes import letter, A4, landscape
 import subprocess
+from os import listdir
+from os import getcwd
+from os import walk
+from os.path import exists
+from os import access
+from os import F_OK, R_OK, W_OK, X_OK
+from os import stat
 import customtopology
 import os
+
+
+# Show directory
+def directory():
+
+    # list_report = listdir('.')
+    #
+    # for list_dir in list_report:
+    #     print(list_dir)
+
+    # tree = walk('.')
+    #
+    # print(tree)
+
+    # exists('./report.txt')
+
+    # z = access('./report.txt', os.W_OK)
+    # print(z)
+    info = stat('./report.txt')
+    print("========================> Size of the report file is:", info.st_size)
+    print("========================> The most recent modification is:", info.st_mtime)
 
 
 # Open a file
@@ -21,10 +49,13 @@ def openfile():
 
 # Open the JSON file
 def json():
+
     status.config(text="JSON file")
     with open('Topology', 'r+') as f:
         data = f.read()
         tkinter.messagebox.showinfo("The JSON file", data)
+#         data_json = Text(root, height=35, width=35, bg='lightblue')
+#         data_json.pack(side=TOP, fill=X, padx=2, pady=2)
 
 
 # About software version and the developer
@@ -107,8 +138,8 @@ def plot_preview():
 
 # Generate a report when deployment has been completed
 def report():
-    tkinter.messagebox.showinfo("Generate report", "Report has been generated as a txt format")
-    status.config(text="Report has been published as a txt format")
+    tkinter.messagebox.showinfo("Generate report", "Report has been generated")
+    status.config(text="Report has been published")
 
     reader = open('./stdout.txt', 'r')
     rep = reader.readlines()
@@ -160,7 +191,8 @@ Co_checkBtn = Button(toolbar, text="Connection check preview as a plot", bg='lig
 DeployBtn = Button(toolbar, text="Deploy topology to mininet from the JSON file", bg='DeepSkyBlue2', command=customtopology.testtopology)
 ModifyJsonBtn = Button(toolbar, text="Preview the JSON File", bg='lightblue',  command=json)
 PdfReportBtn = Button(toolbar, text="Generate a report",  bg='lightblue', command=report)
-ClearCanvasBtn = Button(toolbar, text="Clear canvas entirely",  bg='lightblue', command=clear_canvas)
+DirectoryBtn = Button(toolbar, text="Show the report",  bg='lightblue', command=directory)
+ClearCanvasBtn = Button(toolbar, text="Clear canvas",  bg='lightblue', command=clear_canvas)
 
 PlotBtn.pack(side=LEFT, padx=1, pady=1)
 PathBtn.pack(side=LEFT, padx=1, pady=1)
@@ -168,6 +200,7 @@ Co_checkBtn.pack(side=LEFT, padx=1, pady=1)
 DeployBtn.pack(side=LEFT, padx=1, pady=1)
 ModifyJsonBtn.pack(side=LEFT, padx=1, pady=1)
 PdfReportBtn.pack(side=LEFT, padx=1, pady=1)
+DirectoryBtn.pack(side=LEFT, padx=1, pady=1)
 ClearCanvasBtn.pack(side=LEFT, padx=1, pady=1)
 toolbar.pack(side=TOP, fill=X)
 
@@ -175,26 +208,27 @@ toolbar.pack(side=TOP, fill=X)
 # Drop down lists
 choices = list()
 
-for host in customtopology.data['Hosts']:
+for host in customtopology.data['Hosts']:  # a loop in Hosts list from JSON file to test iPerf.
     choices.append(host)
 
-node_1 = StringVar(root)  # made a variable for dropdown
+node_1 = StringVar(root)  # makes a variable for drop down
 node_2 = StringVar(root)
 
-node_1.set(choices[0])
+node_1.set(choices[0])    # makes a default value for drop down
 node_2.set(choices[1])
 callback()
 
 drop_down_1 = OptionMenu(root, node_1, *choices)
-drop_down_2 = OptionMenu(root, node_2, *choices)
+drop_down_2 = OptionMenu(root, node_2,  *choices)
 
-drop_down_1.pack(side=TOP,  padx=3, pady=3, )
-drop_down_2.pack(side=TOP,  padx=3, pady=3, )
+drop_down_1.pack(side=TOP,  padx=3, pady=3, anchor=CENTER)
+drop_down_2.pack(side=TOP,  padx=3, pady=3, anchor=CENTER)
 
 node_1.trace('w', callback)
 node_2.trace('w', callback)
 
-# Iperf label
+
+# iPerf label
 w = Label(root, text="Choose hosts from drop down list and press deploy button to test IPerf for any specific nodes and see the result in the canvas",
                 bg='deepskyblue', bd=2, relief=GROOVE)
 w.pack(side=TOP)

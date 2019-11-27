@@ -53,8 +53,6 @@ def testtopology():
             clean = net.cleanup
             print('cleanup the mininet network: ' + str(clean) + '\n')
 
-
-
     with open('./stdout.txt') as infile:
         mnOutput.insert(END, infile.read())
 
