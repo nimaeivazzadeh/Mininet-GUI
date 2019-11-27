@@ -9,7 +9,6 @@ from reportlab.lib.units import inch, cm
 from reportlab.lib.pagesizes import letter, A4, landscape
 import subprocess
 from os import listdir
-from os import getcwd
 from os import walk
 from os.path import exists
 from os import access
