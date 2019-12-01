@@ -2,10 +2,10 @@ from mininet.topo import Topo
 from mininet.cli import CLI
 from mininet.net import Mininet
 from mininet.log import setLogLevel, info
-from mininet.node import OVSSwitch
+from mininet.node import RemoteController, OVSKernelSwitch, Controller, OVSSwitch
+from mininet.link import TCLink, Intf
 import tkinter.messagebox
 from tkinter import END
-import sys
 import json
 
 from contextlib import redirect_stdout, redirect_stderr
@@ -23,9 +23,15 @@ def testtopology():
     with open('./stdout.txt', 'w') as outfile:
         with redirect_stdout(outfile), redirect_stderr(outfile):
 
-            num_hosts = len(data['Hosts'])    # <---- This address to the 'Hosts' list in JSON file.
-            topo = CustomTopology(num_hosts)
-            net = Mininet(topo=topo)
+            topo = CustomTopology()
+            net = Mininet(topo=topo,
+                          # switch=OVSSwitch,
+                          # autoSetMacs=True,
+                          cleanup=True)
+
+            # c0 = net.addController(name='c0', controller=RemoteController, ip='127.0.0.1', protocol='tcp', port=6633)
+            # net.build()
+            # c0.start()
 
             print('\n =================================================> Start the topology \n')
             net.start()
@@ -55,11 +61,11 @@ def testtopology():
 
     with open('./stdout.txt') as infile:
         mnOutput.insert(END, infile.read())
-
+        # CLI(net)
 
 class CustomTopology(Topo):
 
-    def __init__(self, n, **opts):
+    def __init__(self,  **opts):
 
         global switch
         Topo.__init__(self, **opts)
@@ -75,9 +81,12 @@ class CustomTopology(Topo):
             print("\n Host=============================================>" + host + '\n',)
 
         info('****************************Links hosts and switches to each other based on JSON file Links dictionary')
-        for client_machine in range(n):
-            host = self.addHost('h%s' % (client_machine + 1))
-            self.addLink(host, switch)
+        for link in data['Links']:
+            for A, B in link.items():
+                a_name = A.split('-')[0]
+                b_name = B.split('-')[0]
+                linkk = self.addLink(a_name, b_name)
+                # print("\n Host=============================================>" + str(linkk) + '\n', )
 
 
 if __name__ == '__main__':

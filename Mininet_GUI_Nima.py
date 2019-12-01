@@ -3,37 +3,14 @@ import tkinter.messagebox
 from tkinter import filedialog
 import networkx as nx
 import matplotlib.pyplot as plt
-import datetime
-from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch, cm
-from reportlab.lib.pagesizes import letter, A4, landscape
-import subprocess
-from os import listdir
-from os import walk
-from os.path import exists
-from os import access
-from os import F_OK, R_OK, W_OK, X_OK
 from os import stat
 import customtopology
-import os
 
 
 # Show directory
 def directory():
 
-    # list_report = listdir('.')
-    #
-    # for list_dir in list_report:
-    #     print(list_dir)
 
-    # tree = walk('.')
-    #
-    # print(tree)
-
-    # exists('./report.txt')
-
-    # z = access('./report.txt', os.W_OK)
-    # print(z)
     info = stat('./report.txt')
     print("========================> Size of the report file is:", info.st_size)
     print("========================> The most recent modification is:", info.st_mtime)
@@ -53,8 +30,9 @@ def json():
     with open('Topology', 'r+') as f:
         data = f.read()
         tkinter.messagebox.showinfo("The JSON file", data)
-#         data_json = Text(root, height=35, width=35, bg='lightblue')
-#         data_json.pack(side=TOP, fill=X, padx=2, pady=2)
+
+        data_json = Text(root, height=35, width=35, bg='lightblue')
+        data_json.pack(side=TOP, fill=X, padx=2, pady=2)
 
 
 # About software version and the developer
@@ -65,73 +43,42 @@ def about():
                                 "\n Developed by Python 3+ for the \n"
                                 " course problems solving \n "
                                 "with scripting language")
-
-
-# create a path from JSON file
-def path_preview():
-    status.config(text="Path Preview")
-    g = nx.DiGraph()
-    for path in customtopology.data['Path']:
-        for p in path:
-            src = p
-            dst = path[p]
-
-            sr_link = src
-            ds_link = dst
-
-# create graph from the JSON file to show Path
-            g.add_node(sr_link)
-            g.add_node(ds_link)
-            g.add_edge(sr_link, ds_link)
-    nx.draw_networkx(g, node_color='g', with_labels=True, node_size=400, font_size=10)
-    plt.ylabel('Path Preview')
-    plt.title('Path graph based on "path" dictionary in JSON file')
-    plt.show()
-
-
-# Connection check
-def co_check():
-    status.config(text="Connection check Preview")
-    g = nx.DiGraph()
-    for co in customtopology.data['Con-check']:
-        for check in co:
-            src_node = check
-            des_node = co[check]
-
-            src_node_name = src_node
-            des_node_name = des_node
-
-            # create graph from the JSON file to show Co_Check
-            g.add_node(src_node_name)
-            g.add_node(des_node_name)
-            g.add_edge(src_node_name, des_node_name)
-    nx.draw_networkx(g, node_color='y',  with_labels=True, node_size=400, font_size=10)
-    plt.ylabel('Connection check')
-    plt.title('Co check graph based on connection dictionary in JSON file')
-    plt.show()
-
-
 # Plot preview
 def plot_preview():
-    status.config(text="Plot Preview form Links dictionary in JSON file")
-    g = nx.Graph()
+
+    nodes = customtopology.data['Switches'] + customtopology.data['Hosts']
+    path = customtopology.data['Path']
+    labels = {}
+    edges_all = []
+    edges_path = []
+    G = nx.DiGraph()
+
     for link in customtopology.data['Links']:
-        for x in link:
-            source_node = x
-            destination_node = link[x]
+        for A, B in link.items():
+            A_name = A.split('-')[0]
+            A_if = A.split('-')[1]
+            B_name = B.split('-')[0]
+            B_if = B.split('-')[1]
+            edges_all.append([A_name, B_name])
+            labels[(A_name, B_name)] = A_if
+            labels[(B_name, A_name)] = B_if
 
-            source_node_name = source_node.split('-')[0]
-            destination_node_name = destination_node.split('-')[0]
+    for i in range(0, len(path) - 1):
+        edges_path.append([path[i], path[i + 1]])
 
-            # create graph from JSON file made for the project
-            g.add_node(source_node_name)
-            g.add_node(destination_node_name)
-            g.add_edge(source_node_name, destination_node_name)
+    G.add_nodes_from(nodes)
+    G.add_edges_from(edges_all)
 
-    pos = nx.spring_layout(g)
-    nx.draw_networkx(g, pos, node_color='orange', with_labels=True, node_size=400, font_size=10)
+    pos = nx.spring_layout(G)
+
+    nx.draw_networkx_nodes(G, pos, node_color='orange')
+    nx.draw_networkx_labels(G, pos, node_size=800, font_size=10, with_labels=True)
+    nx.draw_networkx_edges(G, pos, arrows=False)
+    nx.draw_networkx_edges(G, pos, edges_path, edge_color='#00FF00', arrowsize=20)
+    nx.draw_networkx_edge_labels(G, pos, labels, 0.8)
     plt.ylabel('Topology')
     plt.title('Topology graph based on "Links" dictionary in JSON file')
+    plt.axis('off')
     plt.show()
 
 
@@ -185,21 +132,15 @@ EditMenu.add_command(label="About", command=about)
 toolbar = Frame(root, bg="lightblue")
 
 PlotBtn = Button(toolbar, text="Topology preview as a plot", bg='lightblue', command=plot_preview)
-PathBtn = Button(toolbar, text="Path preview as a plot", bg='lightblue', command=path_preview)
-Co_checkBtn = Button(toolbar, text="Connection check preview as a plot", bg='lightblue', command=co_check)
 DeployBtn = Button(toolbar, text="Deploy topology to mininet from the JSON file", bg='DeepSkyBlue2', command=customtopology.testtopology)
 ModifyJsonBtn = Button(toolbar, text="Preview the JSON File", bg='lightblue',  command=json)
 PdfReportBtn = Button(toolbar, text="Generate a report",  bg='lightblue', command=report)
-DirectoryBtn = Button(toolbar, text="Show the report",  bg='lightblue', command=directory)
 ClearCanvasBtn = Button(toolbar, text="Clear canvas",  bg='lightblue', command=clear_canvas)
 
 PlotBtn.pack(side=LEFT, padx=1, pady=1)
-PathBtn.pack(side=LEFT, padx=1, pady=1)
-Co_checkBtn.pack(side=LEFT, padx=1, pady=1)
 DeployBtn.pack(side=LEFT, padx=1, pady=1)
 ModifyJsonBtn.pack(side=LEFT, padx=1, pady=1)
 PdfReportBtn.pack(side=LEFT, padx=1, pady=1)
-DirectoryBtn.pack(side=LEFT, padx=1, pady=1)
 ClearCanvasBtn.pack(side=LEFT, padx=1, pady=1)
 toolbar.pack(side=TOP, fill=X)
 
