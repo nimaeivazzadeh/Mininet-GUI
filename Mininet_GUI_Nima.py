@@ -9,14 +9,6 @@ import customtopology
 import psutil
 
 
-# Show directory
-def directory():
-
-
-    info = stat('./report.txt')
-    print("========================> Size of the report file is:", info.st_size)
-    print("========================> The most recent modification is:", info.st_mtime)
-
 
 # Open a file
 def openfile():
@@ -78,9 +70,9 @@ def plot_preview():
     nx.draw_networkx_edges(G, pos, arrows=False)
     nx.draw_networkx_edges(G, pos, edges_path, edge_color='#00FF00', arrowsize=20)
     nx.draw_networkx_edge_labels(G, pos, labels, 0.8)
-    plt.ylabel('Topology')
+    # plt.ylabel('Topology')
     plt.title('Topology graph based on "Links" dictionary in JSON file')
-    plt.axis('off')
+    plt.axis('on')
     plt.show()
 
 
@@ -98,20 +90,6 @@ def report():
     f.close()
 
 
-# Monitor CPU usage
-def cpu():
-
-    cpu_usage = psutil.cpu_percent()
-    tkinter.messagebox.showinfo("The CPU usage:", "CPU usage: " + str(cpu_usage))
-
-
-# Monitor MEMORY usage
-def memory():
-
-    memory_usage = psutil.virtual_memory()
-    tkinter.messagebox.showinfo("The MEMORY usage:", "Memory usage: " + str(memory_usage))
-
-
 # clear canvas
 def clear_canvas():
     status.config(text="Canvas has been cleared")
@@ -123,13 +101,11 @@ def callback(*args):
     customtopology.node_1 = node_1.get()
     customtopology.node_2 = node_2.get()
 
-
 root = Tk()
 
 root.geometry("1960x960")
 root.title('This is the Mininet project designed and developed by Nima Eivazzadeh')
 root.option_add("*Dialog.msg.wrapLength", "10i")
-
 
 # Menu_bar
 menu_bar = Menu(root)
@@ -144,6 +120,7 @@ EditMenu = Menu(menu_bar, tearoff=0)
 menu_bar.add_cascade(label="Edit", menu=EditMenu)
 EditMenu.add_command(label="About", command=about)
 
+
 # Toolbar
 toolbar = Frame(root, bg="lightblue")
 
@@ -151,19 +128,20 @@ PlotBtn = Button(toolbar, text="Topology preview as a plot", bg='lightblue', com
 DeployBtn = Button(toolbar, text="Deploy topology to mininet from the JSON file", bg='DeepSkyBlue2', command=customtopology.testtopology)
 ModifyJsonBtn = Button(toolbar, text="Preview the JSON File", bg='lightblue',  command=json)
 PdfReportBtn = Button(toolbar, text="Generate a report",  bg='lightblue', command=report)
-MonitorCpuBtn = Button(toolbar, text="Monitor CPU usage",  bg='lightblue', command=cpu)
-MonitorMemoryBtn = Button(toolbar, text="Monitor Memory usage",  bg='lightblue', command=memory)
+# MonitorCpuBtn = Button(toolbar, text="Monitor CPU usage",  bg='lightblue', command=cpu)
+# MonitorMemoryBtn = Button(toolbar, text="Monitor Memory usage",  bg='lightblue', command=memory)
+# ProgressBtn = Button(toolbar, text="Progress",  bg='lightblue', command=bar)
 ClearCanvasBtn = Button(toolbar, text="Clear canvas",  bg='lightblue', command=clear_canvas)
 
 PlotBtn.pack(side=LEFT, padx=1, pady=1)
 DeployBtn.pack(side=LEFT, padx=1, pady=1)
 ModifyJsonBtn.pack(side=LEFT, padx=1, pady=1)
 PdfReportBtn.pack(side=LEFT, padx=1, pady=1)
-MonitorCpuBtn.pack(side=LEFT, padx=1, pady=1)
-MonitorMemoryBtn.pack(side=LEFT, padx=1, pady=1)
+# MonitorCpuBtn.pack(side=LEFT, padx=1, pady=1)
+# MonitorMemoryBtn.pack(side=LEFT, padx=1, pady=1)
+# ProgressBtn.pack(side=LEFT, padx=1, pady=1)
 ClearCanvasBtn.pack(side=LEFT, padx=1, pady=1)
 toolbar.pack(side=TOP, fill=X)
-
 
 # Drop down lists
 choices = list()
@@ -178,14 +156,15 @@ node_1.set(choices[0])    # makes a default value for drop down
 node_2.set(choices[1])
 callback()
 
+node_1.trace('w', callback)
+node_2.trace('w', callback)
+
 drop_down_1 = OptionMenu(root, node_1, *choices)
 drop_down_2 = OptionMenu(root, node_2,  *choices)
 
-drop_down_1.pack(side=TOP,  padx=3, pady=3, anchor=CENTER)
-drop_down_2.pack(side=TOP,  padx=3, pady=3, anchor=CENTER)
 
-node_1.trace('w', callback)
-node_2.trace('w', callback)
+drop_down_1.pack(side=TOP,  padx=3, pady=3)
+drop_down_2.pack(side=TOP,  padx=3, pady=3)
 
 
 # iPerf label
@@ -196,14 +175,46 @@ w.pack(side=TOP)
 
 # Textbox
 textBox_mininet_deploy = Text(root, height=35, width=200, bg='lightblue')
-textBox_mininet_deploy.pack(side=TOP,  fill=X, padx=2, pady=2)
+textBox_mininet_deploy.pack(side=TOP, fill=X,  padx=2, pady=2)
 customtopology.mnOutput = textBox_mininet_deploy
 
+# Progress bar widget
+cpu_progress_bar = Progressbar(root, orient = HORIZONTAL, length = 200, mode = 'determinate')
+cpu_progress_bar['maximum'] = 100
+cpu_progress_bar['value'] = 30
+cpu_progress_bar.pack(pady = 10)
+cpu_label = Label(root, text='CPU usage')
+cpu_label.pack()
+
+memory_progress_bar = Progressbar(root, orient = HORIZONTAL, length = 200, mode = 'determinate')
+memory_progress_bar['maximum'] = 100
+memory_progress_bar['value'] = 50
+memory_progress_bar.pack(pady = 10)
+memory_label = Label(root, text='Memory usage')
+memory_label.pack()
 
 # StatusBar
 status = Label(root, text="Mininet Project designed and developed by Nima Eivazzadeh",
                      bd=2, bg="deepskyblue", relief=GROOVE, )
 status.pack(side=BOTTOM, fill=X, padx=20, pady=20)
+
+
+# Cpu and Memory usage
+def tick():
+
+    INTERVAL = 500
+
+    cpu_usage = psutil.cpu_percent()
+    cpu_progress_bar['value'] = cpu_usage
+    cpu_label['text'] = 'CPU usage = ' + str(cpu_usage) + ' % '
+
+    memory_usage = psutil.virtual_memory()._asdict()['percent']
+    memory_progress_bar['value'] = memory_usage
+    memory_label['text'] = 'Memory usage = ' + str(memory_usage) + ' % '
+
+    root.after(INTERVAL, tick)
+
+tick()
 
 # Mainloop
 root.mainloop()
