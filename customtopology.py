@@ -7,7 +7,6 @@ from mininet.link import TCLink, Intf
 import tkinter.messagebox
 from tkinter import END
 import json
-
 from contextlib import redirect_stdout, redirect_stderr
 
 
@@ -63,6 +62,7 @@ def testtopology():
         mnOutput.insert(END, infile.read())
         # CLI(net)
 
+
 class CustomTopology(Topo):
 
     def __init__(self,  **opts):
@@ -85,8 +85,7 @@ class CustomTopology(Topo):
             for A, B in link.items():
                 a_name = A.split('-')[0]
                 b_name = B.split('-')[0]
-                linkk = self.addLink(a_name, b_name)
-                # print("\n Host=============================================>" + str(linkk) + '\n', )
+                self.addLink(a_name, b_name)
 
 
 if __name__ == '__main__':

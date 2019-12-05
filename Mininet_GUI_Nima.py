@@ -1,10 +1,12 @@
 from tkinter import *
+from tkinter.ttk import Progressbar
 import tkinter.messagebox
 from tkinter import filedialog
 import networkx as nx
 import matplotlib.pyplot as plt
 from os import stat
 import customtopology
+import psutil
 
 
 # Show directory
@@ -96,6 +98,20 @@ def report():
     f.close()
 
 
+# Monitor CPU usage
+def cpu():
+
+    cpu_usage = psutil.cpu_percent()
+    tkinter.messagebox.showinfo("The CPU usage:", "CPU usage: " + str(cpu_usage))
+
+
+# Monitor MEMORY usage
+def memory():
+
+    memory_usage = psutil.virtual_memory()
+    tkinter.messagebox.showinfo("The MEMORY usage:", "Memory usage: " + str(memory_usage))
+
+
 # clear canvas
 def clear_canvas():
     status.config(text="Canvas has been cleared")
@@ -114,6 +130,7 @@ root.geometry("1960x960")
 root.title('This is the Mininet project designed and developed by Nima Eivazzadeh')
 root.option_add("*Dialog.msg.wrapLength", "10i")
 
+
 # Menu_bar
 menu_bar = Menu(root)
 root.config(menu=menu_bar, width=1680, height=768, bg="SkyBlue1")
@@ -123,7 +140,6 @@ menu_bar.add_cascade(label="File", menu=subMenu)
 subMenu.add_command(label="Open", command=openfile)
 subMenu.add_separator()
 subMenu.add_command(label="Exit ", command=root.destroy)
-
 EditMenu = Menu(menu_bar, tearoff=0)
 menu_bar.add_cascade(label="Edit", menu=EditMenu)
 EditMenu.add_command(label="About", command=about)
@@ -135,12 +151,16 @@ PlotBtn = Button(toolbar, text="Topology preview as a plot", bg='lightblue', com
 DeployBtn = Button(toolbar, text="Deploy topology to mininet from the JSON file", bg='DeepSkyBlue2', command=customtopology.testtopology)
 ModifyJsonBtn = Button(toolbar, text="Preview the JSON File", bg='lightblue',  command=json)
 PdfReportBtn = Button(toolbar, text="Generate a report",  bg='lightblue', command=report)
+MonitorCpuBtn = Button(toolbar, text="Monitor CPU usage",  bg='lightblue', command=cpu)
+MonitorMemoryBtn = Button(toolbar, text="Monitor Memory usage",  bg='lightblue', command=memory)
 ClearCanvasBtn = Button(toolbar, text="Clear canvas",  bg='lightblue', command=clear_canvas)
 
 PlotBtn.pack(side=LEFT, padx=1, pady=1)
 DeployBtn.pack(side=LEFT, padx=1, pady=1)
 ModifyJsonBtn.pack(side=LEFT, padx=1, pady=1)
 PdfReportBtn.pack(side=LEFT, padx=1, pady=1)
+MonitorCpuBtn.pack(side=LEFT, padx=1, pady=1)
+MonitorMemoryBtn.pack(side=LEFT, padx=1, pady=1)
 ClearCanvasBtn.pack(side=LEFT, padx=1, pady=1)
 toolbar.pack(side=TOP, fill=X)
 
