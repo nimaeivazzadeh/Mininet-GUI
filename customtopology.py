@@ -23,14 +23,7 @@ def testtopology():
         with redirect_stdout(outfile), redirect_stderr(outfile):
 
             topo = CustomTopology()
-            net = Mininet(topo=topo,
-                          # switch=OVSSwitch,
-                          # autoSetMacs=True,
-                          cleanup=True)
-
-            # c0 = net.addController(name='c0', controller=RemoteController, ip='127.0.0.1', protocol='tcp', port=6633)
-            # net.build()
-            # c0.start()
+            net = Mininet(topo=topo, cleanup=True)
 
             print('\n =================================================> Start the topology \n')
             net.start()
